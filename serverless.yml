@@ -1,0 +1,29 @@
+
+
+service: auth-service
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${opt:stage, 'dev'}
+  region: eu-west-3
+
+
+
+
+functions:
+  testFunction:
+    handler: src/functions/testFunction.handlerTestFunction
+  hello:
+    handler: handler.hello
+
+
+plugins:
+  - serverless-pseudo-parameters
+  - serverless-mocha
+custom:
+  serverless-mocha-plugin:
+    testTemplate: templates/testTemplate.ejs
+    functionTemplate: templates/functionTemplate.ejs

@@ -1,0 +1,8 @@
+# create a function : 
+sls create function -f testFunction --handler src/functions/testFunction.handlerTestFunction
+
+# change undefind function name 
+
+# create a test : 
+sls create test -f testFunction --path src/tests
+
