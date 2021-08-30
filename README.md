@@ -16,3 +16,8 @@ Options
     --secret or -s The aws_secret_access_key. Required.
     --profile or -n The name of the profile which should be created.
     --overwrite or -o Overwrite the profile if it exists.
+
+### Deploy to aws
+```
+sls deploy
+```
