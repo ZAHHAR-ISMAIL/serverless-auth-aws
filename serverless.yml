@@ -1,6 +1,5 @@
 
-
-service: auth-service
+service: serverless-auth-aws
 
 frameworkVersion: '2'
 
@@ -8,21 +7,54 @@ provider:
   name: aws
   runtime: nodejs12.x
   stage: ${opt:stage, 'dev'}
-  region: eu-west-3
+  region: eu-central-1
 
-
-
+iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - "dynamodb:Query"
+        - "dynamodb:Scan"
+        - "dynamodb:PutItem"
+        - "dynamodb:GetItem"
+      Resource: "*"
 
 functions:
-  testFunction:
-    handler: src/functions/testFunction.handlerTestFunction
-  hello:
-    handler: handler.hello
+  getUser:
+    handler: src/functions/getUser.getUser
+    events:
+      - http:
+          method: get
+          cors: true
+          path: /v1/users/{ID}
+  # validate:
+  #   handler: src/functions/validate.validate
+  # loginUser:
+  #   handler: src/functions/loginUser.login
+  #   events:
+  #     - http:
+  #         method: post
+  #         cors: true
+  #         path: /v1/users/login
+          # request:
+          #   schema:
+          #     application/json: ${file(src/schema/login_request.json)}
+  # createUser:
+  #   handler: src/functions/createUser.createUser
+  #   events:
+  #     - http:
+  #         method: post
+  #         cors: true
+  #         path: /v1/users
+          # authorizer: validate
+          # request:
+          #   schema:
+          #     application/json: ${file(src/schema/create_user_request.json)}
 
+  
 
-plugins:
-  - serverless-pseudo-parameters
-  - serverless-mocha
+# plugins:
+#   - serverless-pseudo-parameters
+#   - serverless-mocha
 custom:
   serverless-mocha-plugin:
     testTemplate: templates/testTemplate.ejs
