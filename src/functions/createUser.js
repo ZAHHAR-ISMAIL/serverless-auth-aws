@@ -1,36 +1,27 @@
 'use strict';
 const AWS = require('aws-sdk')
+const Responses = require('../services/response');
+const Dynamo = require('../services/dynamo');
 const bcrypt = require('bcryptjs')
+const tableName = process.env.DYNAMODB_USER_TABLE
 
 module.exports.createUser = async (event, context) => {
   const body = JSON.parse(event.body)
-  const username = body.username
-  const password = body.password
-  const newUserParams = {
-    TableName: process.env.DYNAMODB_USER_TABLE,
-    Item: {
-      pk: username,
-      password: bcrypt.hashSync(password, 10)
-      // password: password
-    }
+  if (!body.username || !body.password) {
+    return Responses._400({ message: 'IT: missing parameters in in REQUEST' });
   }
-  try {
-    const dynamodb = new AWS.DynamoDB.DocumentClient()
-    const putResult = await dynamodb.put(newUserParams).promise()
-    return {
-      statusCode: 201,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': true,
-        'Access-Control-Allow-Headers': 'Authorization'
-      }
-    }
-  } catch(putError) {
-    console.log('There was an error putting the new item')
-    console.log('putError', putError)
-    console.log('newUserParams', newUserParams)
-    return new Error('There was an error putting the new item')
-  }
+
+  const Data = await Dynamo.insert({
+    data: {
+      pk: body.username,
+      password: bcrypt.hashSync(body.password, 10) // if you want to crypt the psswd
+      // password: body.password
+    },
+    tableName
+
+  });
+
+  return Responses._200(Data);
 
 
 };

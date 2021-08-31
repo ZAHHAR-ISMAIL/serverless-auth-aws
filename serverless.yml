@@ -9,19 +9,18 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: eu-central-1
 
+  iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - "dynamodb:Query"
+          - "dynamodb:Scan"
+          - "dynamodb:PutItem"
+          - "dynamodb:GetItem"
+        Resource: "*"
 
-iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - "dynamodb:Query"
-        - "dynamodb:Scan"
-        - "dynamodb:PutItem"
-        - "dynamodb:GetItem"
-      Resource: "*"
-
-environment:
-    DYNAMODB_USER_TABLE: ${self:custom.dynamodb.userTable}
-    JWT_SECRET: ""
+  environment:
+      DYNAMODB_USER_TABLE: ${self:custom.dynamodb.userTable}
+      JWT_SECRET: "@bvb"
 
 functions:
   getUser:
@@ -42,15 +41,15 @@ functions:
           # request:
           #   schema:
           #     application/json: ${file(src/schema/createUser.json)}
-  # validate:
-  #   handler: src/functions/validate.validate
-  # loginUser:
-  #   handler: src/functions/loginUser.login
-  #   events:
-  #     - http:
-  #         method: post
-  #         cors: true
-  #         path: /v1/users/login
+  validate:
+    handler: src/functions/validate.validate
+  loginUser:
+    handler: src/functions/loginUser.login
+    events:
+      - http:
+          method: post
+          cors: true
+          path: /v1/users/login
           # request:
           #   schema:
           #     application/json: ${file(src/schema/login_request.json)}
