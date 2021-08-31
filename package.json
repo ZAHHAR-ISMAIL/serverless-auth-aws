@@ -2,7 +2,9 @@
   "name": "serverless-auth-aws",
   "description": "",
   "version": "0.1.0",
-  "dependencies": {},
+  "dependencies": {
+    "bcryptjs": "^2.4.3"
+  },
   "devDependencies": {
     "aws-sdk": "^2.895.0",
     "aws-sdk-mock": "^5.1.0",

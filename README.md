@@ -1,4 +1,7 @@
-
+### You know what to do first 
+```
+npm i
+```
 
 ### Install Serverless Framwork
 ```
